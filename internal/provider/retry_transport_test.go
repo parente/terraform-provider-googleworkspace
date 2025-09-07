@@ -7,7 +7,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"google.golang.org/api/googleapi"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -15,6 +14,8 @@ import (
 	"sync"
 	"testing"
 	"time"
+
+	"google.golang.org/api/googleapi"
 )
 
 const testRetryTransportCodeRetry = 500
@@ -293,7 +294,7 @@ func testRetryTransport_checkBody(t *testing.T, resp *http.Response, expectedMsg
 
 	expectedBody := fmt.Sprintf("Request Body: %s", expectedMsg)
 	if !strings.HasSuffix(string(actualBody), expectedBody) {
-		t.Fatalf(expectedBody)
+		t.Fatal(expectedBody)
 	}
 }
 
