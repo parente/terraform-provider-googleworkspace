@@ -137,7 +137,7 @@ func TestConfigLoadAndValidate_accessTokenInvalid(t *testing.T) {
 
 func TestConfigLoadAndValidate_accessToken(t *testing.T) {
 	if os.Getenv("TF_ACC") == "" {
-		t.Skip(fmt.Sprintf("Network access not allowed; use TF_ACC=1 to enable"))
+		t.Skipf("Network access not allowed; use TF_ACC=1 to enable")
 	}
 
 	testAccPreCheck(t)
@@ -194,7 +194,7 @@ func TestConfigLoadAndValidate_accessToken(t *testing.T) {
 // The provider will then only need to be configured with the customer ID and an access token for that service account
 func TestConfigLoadAndValidate_accessTokenOnly(t *testing.T) {
 	if os.Getenv("TF_ACC") == "" {
-		t.Skip(fmt.Sprintf("Network access not allowed; use TF_ACC=1 to enable"))
+		t.Skip("Network access not allowed; use TF_ACC=1 to enable")
 	}
 
 	testAccPreCheck(t)

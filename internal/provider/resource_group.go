@@ -217,14 +217,30 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, meta interfa
 		return handleNotFoundError(err, d, d.Get("email").(string))
 	}
 
-	d.Set("email", group.Email)
-	d.Set("name", group.Name)
-	d.Set("description", group.Description)
-	d.Set("admin_created", group.AdminCreated)
-	d.Set("direct_members_count", group.DirectMembersCount)
-	d.Set("aliases", group.Aliases)
-	d.Set("non_editable_aliases", group.NonEditableAliases)
-	d.Set("etag", group.Etag)
+	if err := d.Set("email", group.Email); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("name", group.Name); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("description", group.Description); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("admin_created", group.AdminCreated); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("direct_members_count", group.DirectMembersCount); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("aliases", group.Aliases); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("non_editable_aliases", group.NonEditableAliases); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("etag", group.Etag); err != nil {
+		return diag.FromErr(err)
+	}
 
 	d.SetId(group.Id)
 

@@ -156,7 +156,9 @@ func resourceGroupMemberCreate(ctx context.Context, d *schema.ResourceData, meta
 		return diag.FromErr(err)
 	}
 
-	d.Set("member_id", member.Id)
+	if err := d.Set("member_id", member.Id); err != nil {
+		return diag.FromErr(err)
+	}
 	d.SetId(fmt.Sprintf("groups/%s/members/%s", groupId, member.Id))
 
 	// INSERT will respond with the Group Member that will be created, however, it is eventually consistent
@@ -221,13 +223,27 @@ func resourceGroupMemberRead(ctx context.Context, d *schema.ResourceData, meta i
 		return handleNotFoundError(err, d, d.Id())
 	}
 
-	d.Set("email", member.Email)
-	d.Set("role", member.Role)
-	d.Set("etag", member.Etag)
-	d.Set("type", member.Type)
-	d.Set("status", member.Status)
-	d.Set("delivery_settings", member.DeliverySettings)
-	d.Set("member_id", member.Id)
+	if err := d.Set("email", member.Email); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("role", member.Role); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("etag", member.Etag); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("type", member.Type); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("status", member.Status); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("delivery_settings", member.DeliverySettings); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("member_id", member.Id); err != nil {
+		return diag.FromErr(err)
+	}
 
 	d.SetId(fmt.Sprintf("groups/%s/members/%s", groupId, member.Id))
 
@@ -354,11 +370,15 @@ func resourceGroupMemberImport(ctx context.Context, d *schema.ResourceData, meta
 
 	// id is of format "groups/<group_id>/members/<member_id>"
 	if len(parts) != 4 {
-		return nil, fmt.Errorf("Group Member Id (%s) is not of the correct format (groups/<group_id>/members/<member_id>)", d.Id())
+		return nil, fmt.Errorf("group member id (%s) is not of the correct format (groups/<group_id>/members/<member_id>)", d.Id())
 	}
 
-	d.Set("group_id", parts[1])
-	d.Set("member_id", parts[3])
+	if err := d.Set("group_id", parts[1]); err != nil {
+		return nil, err
+	}
+	if err := d.Set("member_id", parts[3]); err != nil {
+		return nil, err
+	}
 
 	return []*schema.ResourceData{d}, nil
 }

@@ -6,6 +6,7 @@ package googleworkspace
 import (
 	"context"
 	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -63,7 +64,9 @@ func dataSourceGroupMemberRead(ctx context.Context, d *schema.ResourceData, meta
 			return diags
 		}
 
-		d.Set("member_id", member.Id)
+		if err := d.Set("member_id", member.Id); err != nil {
+			return diag.FromErr(err)
+		}
 		d.SetId(fmt.Sprintf("groups/%s/members/%s", groupId, member.Id))
 	}
 

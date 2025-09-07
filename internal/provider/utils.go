@@ -5,7 +5,6 @@ package googleworkspace
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/mail"
 	"os"
@@ -18,6 +17,8 @@ import (
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 
 	"github.com/mitchellh/go-homedir"
 
@@ -45,7 +46,7 @@ func pathOrContents(poc string) (string, bool, error) {
 	}
 
 	if _, err := os.Stat(path); err == nil {
-		contents, err := ioutil.ReadFile(path)
+		contents, err := os.ReadFile(path)
 		if err != nil {
 			return string(contents), true, err
 		}
@@ -79,7 +80,7 @@ func handleNotFoundError(err error, d *schema.ResourceData, resource string) dia
 // since that would require us to generate a very particular ordering of arguments.
 func Nprintf(format string, params map[string]interface{}) string {
 	for key, val := range params {
-		format = strings.Replace(format, "%{"+key+"}", fmt.Sprintf("%v", val), -1)
+		format = strings.ReplaceAll(format, "%{"+key+"}", fmt.Sprintf("%v", val))
 	}
 	return format
 }
@@ -87,10 +88,15 @@ func Nprintf(format string, params map[string]interface{}) string {
 // This will translate a snake cased string to a camel case string
 // Note: the first letter of the camel case string will be lower case
 func SnakeToCamel(s string) string {
-	titled := strings.Title(strings.ReplaceAll(s, "_", " "))
-	cameled := strings.Join(strings.Split(titled, " "), "")
+	// Use cases.Title for proper Unicode handling
+	imported := strings.ReplaceAll(s, "_", " ")
+	titled := cases.Title(language.Und, cases.NoLower).String(imported)
+	cameled := strings.Join(strings.Fields(titled), "")
 
-	// Lower the first letter
+	// Lower the first letter for lowerCamelCase
+	if len(cameled) == 0 {
+		return ""
+	}
 	result := []rune(cameled)
 	result[0] = unicode.ToLower(result[0])
 	return string(result)
@@ -205,8 +211,5 @@ func sortListOfInterfaces(v []interface{}) []string {
 // isEmail returns a boolean indicating if the input string is parsable as an email
 func isEmail(input string) bool {
 	_, err := mail.ParseAddress(input)
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 }

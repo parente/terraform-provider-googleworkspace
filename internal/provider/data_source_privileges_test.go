@@ -5,10 +5,11 @@ package googleworkspace
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"reflect"
 	"strconv"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	directory "google.golang.org/api/admin/directory/v1"
@@ -33,9 +34,9 @@ func TestAccDataSourcePrivileges_basic(t *testing.T) {
 }
 
 func testAccDataSourcePrivileges() string {
-	return fmt.Sprintf(`
+	return `
 data "googleworkspace_privileges" "test" {}
-`)
+`
 }
 
 func testAccResourcePrivilegesCount(resource, attr string) resource.TestCheckFunc {

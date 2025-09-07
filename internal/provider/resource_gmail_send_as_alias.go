@@ -164,7 +164,9 @@ func resourceGmailSendAsAliasCreate(ctx context.Context, d *schema.ResourceData,
 		return diag.FromErr(err)
 	}
 
-	d.Set("send_as_email", sendAs.SendAsEmail)
+	if err := d.Set("send_as_email", sendAs.SendAsEmail); err != nil {
+		return diag.FromErr(err)
+	}
 	d.SetId(primaryEmail + sendAsIdSeparator + sendAs.SendAsEmail)
 
 	log.Printf("[DEBUG] Finished creating Gmail Send As Alias %q", d.Id())
@@ -229,14 +231,30 @@ func resourceGmailSendAsAliasRead(ctx context.Context, d *schema.ResourceData, m
 	log.Printf("[DEBUG] Finished getting Gmail Send As Alias %q", d.Id())
 
 	d.SetId(primaryEmail + sendAsIdSeparator + sendAs.SendAsEmail)
-	d.Set("send_as_email", sendAs.SendAsEmail)
-	d.Set("display_name", sendAs.DisplayName)
-	d.Set("reply_to_address", sendAs.ReplyToAddress)
-	d.Set("signature", sendAs.Signature)
-	d.Set("is_primary", sendAs.IsPrimary)
-	d.Set("is_default", sendAs.IsDefault)
-	d.Set("treat_as_alias", sendAs.TreatAsAlias)
-	d.Set("verification_status", sendAs.VerificationStatus)
+	if err := d.Set("send_as_email", sendAs.SendAsEmail); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("display_name", sendAs.DisplayName); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("reply_to_address", sendAs.ReplyToAddress); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("signature", sendAs.Signature); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("is_primary", sendAs.IsPrimary); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("is_default", sendAs.IsDefault); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("treat_as_alias", sendAs.TreatAsAlias); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("verification_status", sendAs.VerificationStatus); err != nil {
+		return diag.FromErr(err)
+	}
 	if sendAs.SmtpMsa != nil {
 		if err := d.Set("smtp_msa", flattenSmtpMsa(sendAs.SmtpMsa, d)); err != nil {
 			return diag.FromErr(err)
@@ -275,10 +293,14 @@ func resourceGmailSendAsAliasDelete(ctx context.Context, d *schema.ResourceData,
 func resourceGmailSendAsAliasImport(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	idParts := strings.Split(d.Id(), sendAsIdSeparator)
 	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
-		return nil, fmt.Errorf("Unexpected format of ID (%q), expected primary-email%ssend-as-email", d.Id(), sendAsIdSeparator)
+		return nil, fmt.Errorf("unexpected format of id (%q), expected primary-email%ssend-as-email", d.Id(), sendAsIdSeparator)
 	}
-	d.Set("primary_email", idParts[0])
-	d.Set("send_as_email", idParts[1])
+	if err := d.Set("primary_email", idParts[0]); err != nil {
+		return nil, err
+	}
+	if err := d.Set("send_as_email", idParts[1]); err != nil {
+		return nil, err
+	}
 	return []*schema.ResourceData{d}, nil
 }
 

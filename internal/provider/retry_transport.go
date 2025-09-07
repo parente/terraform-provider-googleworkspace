@@ -8,13 +8,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"google.golang.org/api/googleapi"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/http/httputil"
 	"time"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
+	"google.golang.org/api/googleapi"
 )
 
 const defaultRetryTransportTimeoutSec = 90
@@ -112,7 +113,7 @@ Retry:
 // checkForRetryableError uses the googleapi.CheckResponse util to check for
 // errors in the response, and determines whether there is a retryable error.
 // in response/response error.
-func (t *retryTransport) checkForRetryableError(resp *http.Response, respErr error) *resource.RetryError {
+func (t *retryTransport) checkForRetryableError(resp *http.Response, respErr error) *retry.RetryError {
 	var errToCheck error
 
 	if respErr != nil {
@@ -127,9 +128,9 @@ func (t *retryTransport) checkForRetryableError(resp *http.Response, respErr err
 			// error code and messages in the response body.
 			dumpBytes, err := httputil.DumpResponse(resp, true)
 			if err != nil {
-				return resource.NonRetryableError(fmt.Errorf("unable to check response for error: %v", err))
+				return retry.NonRetryableError(fmt.Errorf("unable to check response for error: %v", err))
 			}
-			respToCheck.Body = ioutil.NopCloser(bytes.NewReader(dumpBytes))
+			respToCheck.Body = io.NopCloser(bytes.NewReader(dumpBytes))
 		}
 		errToCheck = googleapi.CheckResponse(&respToCheck)
 	}
@@ -138,9 +139,9 @@ func (t *retryTransport) checkForRetryableError(resp *http.Response, respErr err
 		return nil
 	}
 	if isRetryableError(errToCheck, t.retryPredicates...) {
-		return resource.RetryableError(errToCheck)
+		return retry.RetryableError(errToCheck)
 	}
-	return resource.NonRetryableError(errToCheck)
+	return retry.NonRetryableError(errToCheck)
 }
 
 // copyHttpRequest provides an copy of the given HTTP request for one RoundTrip.

@@ -136,11 +136,21 @@ func resourceDomainAliasRead(ctx context.Context, d *schema.ResourceData, meta i
 		return diags
 	}
 
-	d.Set("parent_domain_name", domainAlias.ParentDomainName)
-	d.Set("verified", domainAlias.Verified)
-	d.Set("creation_time", domainAlias.CreationTime)
-	d.Set("etag", domainAlias.Etag)
-	d.Set("domain_alias_name", domainAlias.DomainAliasName)
+	if err := d.Set("parent_domain_name", domainAlias.ParentDomainName); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("verified", domainAlias.Verified); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("creation_time", domainAlias.CreationTime); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("etag", domainAlias.Etag); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("domain_alias_name", domainAlias.DomainAliasName); err != nil {
+		return diag.FromErr(err)
+	}
 	d.SetId(domainAlias.DomainAliasName)
 	log.Printf("[DEBUG] Finished getting DomainAlias %q: %#v", d.Id(), domainAlias.DomainAliasName)
 

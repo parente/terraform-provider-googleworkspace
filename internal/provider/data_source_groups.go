@@ -51,10 +51,7 @@ func dataSourceGroupsRead(ctx context.Context, d *schema.ResourceData, meta inte
 
 	var result []*directory.Group
 	err := groupsService.List().Customer(client.Customer).Pages(ctx, func(resp *directory.Groups) error {
-		for _, group := range resp.Groups {
-			result = append(result, group)
-		}
-
+		result = append(result, resp.Groups...)
 		return nil
 	})
 

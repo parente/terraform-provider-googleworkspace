@@ -245,11 +245,21 @@ func resourceSchemaRead(ctx context.Context, d *schema.ResourceData, meta interf
 		return diags
 	}
 
-	d.Set("schema_id", schema.SchemaId)
-	d.Set("schema_name", schema.SchemaName)
-	d.Set("fields", flattenFields(schema.Fields))
-	d.Set("display_name", schema.DisplayName)
-	d.Set("etag", schema.Etag)
+	if err := d.Set("schema_id", schema.SchemaId); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("schema_name", schema.SchemaName); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("fields", flattenFields(schema.Fields)); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("display_name", schema.DisplayName); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("etag", schema.Etag); err != nil {
+		return diag.FromErr(err)
+	}
 	d.SetId(schema.SchemaId)
 	log.Printf("[DEBUG] Finished getting Schema %q: %#v", d.Id(), schemaName)
 

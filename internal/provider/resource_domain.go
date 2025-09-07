@@ -146,10 +146,18 @@ func resourceDomainRead(ctx context.Context, d *schema.ResourceData, meta interf
 		return diag.FromErr(err)
 	}
 
-	d.Set("verified", domain.Verified)
-	d.Set("creation_time", domain.CreationTime)
-	d.Set("is_primary", domain.IsPrimary)
-	d.Set("domain_name", domain.DomainName)
+	if err := d.Set("verified", domain.Verified); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("creation_time", domain.CreationTime); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("is_primary", domain.IsPrimary); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("domain_name", domain.DomainName); err != nil {
+		return diag.FromErr(err)
+	}
 	d.SetId(domain.DomainName)
 	log.Printf("[DEBUG] Finished getting Domain %q: %#v", d.Id(), domain.DomainName)
 

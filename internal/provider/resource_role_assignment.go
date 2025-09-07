@@ -159,11 +159,21 @@ func resourceRoleAssignmentRead(ctx context.Context, d *schema.ResourceData, met
 	}
 
 	d.SetId(strconv.FormatInt(ra.RoleAssignmentId, 10))
-	d.Set("role_id", strconv.FormatInt(ra.RoleId, 10))
-	d.Set("etag", ra.Etag)
-	d.Set("assigned_to", ra.AssignedTo)
-	d.Set("scope_type", ra.ScopeType)
-	d.Set("org_unit_id", ra.OrgUnitId)
+	if err := d.Set("role_id", strconv.FormatInt(ra.RoleId, 10)); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("etag", ra.Etag); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("assigned_to", ra.AssignedTo); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("scope_type", ra.ScopeType); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("org_unit_id", ra.OrgUnitId); err != nil {
+		return diag.FromErr(err)
+	}
 
 	log.Printf("[DEBUG] Finished getting RoleAssignment %q", d.Id())
 

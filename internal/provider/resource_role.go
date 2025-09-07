@@ -219,11 +219,21 @@ func setRole(d *schema.ResourceData, role *directory.Role) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	d.SetId(strconv.FormatInt(role.RoleId, 10))
-	d.Set("name", role.RoleName)
-	d.Set("description", role.RoleDescription)
-	d.Set("is_system_role", role.IsSystemRole)
-	d.Set("is_super_admin_role", role.IsSuperAdminRole)
-	d.Set("etag", role.Etag)
+	if err := d.Set("name", role.RoleName); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("description", role.RoleDescription); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("is_system_role", role.IsSystemRole); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("is_super_admin_role", role.IsSuperAdminRole); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("etag", role.Etag); err != nil {
+		return diag.FromErr(err)
+	}
 
 	privileges := make([]interface{}, len(role.RolePrivileges))
 	for i, priv := range role.RolePrivileges {
