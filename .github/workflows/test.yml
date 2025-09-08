@@ -8,6 +8,8 @@ on:
     paths-ignore:
       - "README.md"
   push:
+    branches:
+      - main
     paths-ignore:
       - "README.md"
 
@@ -35,6 +37,7 @@ jobs:
           version: latest
 
   generate:
+    name: Validate Documentation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -77,10 +80,12 @@ jobs:
           terraform_version: ${{ matrix.terraform }}
           terraform_wrapper: false
       - run: go mod download
-      - env:
-          TF_ACC: "1"
-        run: go test -v -cover ./internal/provider/
-        timeout-minutes: 10
+      # TODO: run unittests only for now
+      - run: make test
+      # - env:
+      #     TF_ACC: "1"
+      #   run: go test -v -cover ./internal/provider/
+      #   timeout-minutes: 10
 
       # TODO: port acceptance test fixtures
       # - name: Get credentials
