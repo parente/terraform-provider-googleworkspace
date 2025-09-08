@@ -1,4 +1,4 @@
-module github.com/hashicorp/terraform-provider-googleworkspace
+module github.com/parente/terraform-provider-googleworkspace
 
 go 1.24.6
 
@@ -10,6 +10,7 @@ require (
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.37.0
 	github.com/mitchellh/go-homedir v1.1.0
 	golang.org/x/oauth2 v0.31.0
+	golang.org/x/text v0.28.0
 	google.golang.org/api v0.248.0
 )
 
@@ -90,7 +91,6 @@ require (
 	golang.org/x/net v0.43.0 // indirect
 	golang.org/x/sync v0.16.0 // indirect
 	golang.org/x/sys v0.35.0 // indirect
-	golang.org/x/text v0.28.0 // indirect
 	golang.org/x/time v0.12.0 // indirect
 	golang.org/x/tools v0.35.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
