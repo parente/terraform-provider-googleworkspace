@@ -1,4 +1,9 @@
-## 0.8.0 (Unreleased)
+## 0.8.0 (September 7, 2025)
+
+IMPROVEMENTS:
+
+* project: updated to golang 1.24 and latest third-party package versions ([#1](https://github.com/parente/terraform-provider-googleworkspace/pull/1))
+
 ## 0.7.0 (June 10, 2022)
 
 FEATURES:
