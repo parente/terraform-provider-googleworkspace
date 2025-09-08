@@ -13,6 +13,9 @@ Group resource manages Google Workspace Groups. Group resides under the `https:/
 ## Example Usage
 
 ```terraform
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "googleworkspace_group" "sales" {
   email       = "sales@example.com"
   name        = "Sales"
@@ -61,8 +64,11 @@ Optional:
 
 Import is supported using the following syntax:
 
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
 ```shell
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 terraform import googleworkspace_group.sales 01abcde23fg4h5i
-# or with email as id
-terraform import googleworkspace_group.sales sales@example.com
 ```

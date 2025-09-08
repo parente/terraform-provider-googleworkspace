@@ -13,6 +13,9 @@ Role resource in the Terraform Googleworkspace provider. Role resides under the 
 ## Example Usage
 
 ```terraform
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 data "googleworkspace_privileges" "privileges" {}
 
 locals {
@@ -66,6 +69,11 @@ Required:
 
 Import is supported using the following syntax:
 
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
 ```shell
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 terraform import googleworkspace_role.admin 12345678901234567
 ```
