@@ -5,6 +5,7 @@ package googleworkspace
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -75,7 +76,7 @@ func googleworkspaceTestClient() (*apiClient, error) {
 	diags := client.loadAndValidate(context.Background())
 	if diags.HasError() {
 		log.Printf("[INFO][SWEEPER_LOG] error loading: %s", diags[0].Summary)
-		return nil, fmt.Errorf(diags[0].Summary)
+		return nil, errors.New(diags[0].Summary)
 	}
 
 	return client, nil

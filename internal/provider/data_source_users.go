@@ -5,6 +5,7 @@ package googleworkspace
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	directory "google.golang.org/api/admin/directory/v1"
@@ -49,10 +50,7 @@ func dataSourceUsersRead(ctx context.Context, d *schema.ResourceData, meta inter
 
 	var result []*directory.User
 	err := usersService.List().Customer(client.Customer).Projection("full").Pages(ctx, func(resp *directory.Users) error {
-		for _, user := range resp.Users {
-			result = append(result, user)
-		}
-
+		result = append(result, resp.Users...)
 		return nil
 	})
 

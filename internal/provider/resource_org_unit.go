@@ -6,11 +6,12 @@ package googleworkspace
 import (
 	"context"
 	"fmt"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	directory "google.golang.org/api/admin/directory/v1"
 	"google.golang.org/api/googleapi"
-	"log"
 )
 
 func resourceOrgUnit() *schema.Resource {
@@ -167,6 +168,10 @@ func resourceOrgUnitCreate(ctx context.Context, d *schema.ResourceData, meta int
 		return fmt.Errorf("timed out while waiting for %s to be inserted", cc.resourceType)
 	})
 
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
 	log.Printf("[DEBUG] Finished creating OrgUnit %q: %#v", d.Id(), ouName)
 
 	return resourceOrgUnitRead(ctx, d, meta)
@@ -193,14 +198,30 @@ func resourceOrgUnitRead(ctx context.Context, d *schema.ResourceData, meta inter
 		return handleNotFoundError(err, d, d.Id())
 	}
 
-	d.Set("name", orgUnit.Name)
-	d.Set("description", orgUnit.Description)
-	d.Set("etag", orgUnit.Etag)
-	d.Set("block_inheritance", orgUnit.BlockInheritance)
-	d.Set("org_unit_id", orgUnit.OrgUnitId)
-	d.Set("org_unit_path", orgUnit.OrgUnitPath)
-	d.Set("parent_org_unit_id", orgUnit.ParentOrgUnitId)
-	d.Set("parent_org_unit_path", orgUnit.ParentOrgUnitPath)
+	if err := d.Set("name", orgUnit.Name); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("description", orgUnit.Description); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("etag", orgUnit.Etag); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("block_inheritance", orgUnit.BlockInheritance); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("org_unit_id", orgUnit.OrgUnitId); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("org_unit_path", orgUnit.OrgUnitPath); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("parent_org_unit_id", orgUnit.ParentOrgUnitId); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("parent_org_unit_path", orgUnit.ParentOrgUnitPath); err != nil {
+		return diag.FromErr(err)
+	}
 
 	d.SetId(orgUnit.OrgUnitId)
 

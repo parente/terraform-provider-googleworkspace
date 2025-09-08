@@ -181,9 +181,15 @@ func dataSourceChromePolicySchemaRead(ctx context.Context, d *schema.ResourceDat
 	}
 
 	d.SetId(policySchema.SchemaName)
-	d.Set("schema_name", policySchema.SchemaName)
-	d.Set("policy_description", policySchema.PolicyDescription)
-	d.Set("support_uri", policySchema.SupportUri)
+	if err := d.Set("schema_name", policySchema.SchemaName); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("policy_description", policySchema.PolicyDescription); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("support_uri", policySchema.SupportUri); err != nil {
+		return diag.FromErr(err)
+	}
 	if err := d.Set("additional_target_key_names", flattenAdditionalTargetKeyNames(policySchema.AdditionalTargetKeyNames)); err != nil {
 		return diag.FromErr(err)
 	}
@@ -193,7 +199,9 @@ func dataSourceChromePolicySchemaRead(ctx context.Context, d *schema.ResourceDat
 
 	// this attribute contains recursive types, so we store it as json
 	fieldDescriptions, _ := json.MarshalIndent(policySchema.FieldDescriptions, "", "  ")
-	d.Set("field_descriptions", string(fieldDescriptions))
+	if err := d.Set("field_descriptions", string(fieldDescriptions)); err != nil {
+		return diag.FromErr(err)
+	}
 
 	if err := d.Set("access_restrictions", policySchema.AccessRestrictions); err != nil {
 		return diag.FromErr(err)
@@ -205,7 +213,7 @@ func dataSourceChromePolicySchemaRead(ctx context.Context, d *schema.ResourceDat
 	return nil
 }
 
-func flattenNotices(ns []*chromepolicy.GoogleChromePolicyV1PolicySchemaNoticeDescription) []interface{} {
+func flattenNotices(ns []*chromepolicy.GoogleChromePolicyVersionsV1PolicySchemaNoticeDescription) []interface{} {
 	result := make([]interface{}, len(ns))
 
 	for i, n := range ns {
@@ -258,7 +266,7 @@ func flattenDefinition(d *chromepolicy.Proto2FileDescriptorProto) []interface{} 
 	return result
 }
 
-func flattenAdditionalTargetKeyNames(as []*chromepolicy.GoogleChromePolicyV1AdditionalTargetKeyName) []interface{} {
+func flattenAdditionalTargetKeyNames(as []*chromepolicy.GoogleChromePolicyVersionsV1AdditionalTargetKeyName) []interface{} {
 	result := make([]interface{}, len(as))
 	for i, a := range as {
 		obj := make(map[string]interface{})

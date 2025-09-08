@@ -82,7 +82,9 @@ func dataSourcePrivilegesRead(ctx context.Context, d *schema.ResourceData, meta 
 	}
 
 	d.SetId(privileges.Etag)
-	d.Set("etag", privileges.Etag)
+	if err := d.Set("etag", privileges.Etag); err != nil {
+		return diag.FromErr(err)
+	}
 
 	if err := d.Set("items", flattenAndPrunePrivileges(privileges.Items, make(map[string]bool))); err != nil {
 		return diag.FromErr(err)

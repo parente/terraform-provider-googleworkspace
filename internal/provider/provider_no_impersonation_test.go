@@ -25,9 +25,9 @@ func TestAccResourceGroup_noImpersonation(t *testing.T) {
 	}
 
 	impersonation := getTestImpersonatedUserFromEnv()
-	os.Unsetenv("GOOGLEWORKSPACE_IMPERSONATED_USER_EMAIL")
+	_ = os.Unsetenv("GOOGLEWORKSPACE_IMPERSONATED_USER_EMAIL")
 	t.Cleanup(func() {
-		os.Setenv("GOOGLEWORKSPACE_IMPERSONATED_USER_EMAIL", impersonation)
+		_ = os.Setenv("GOOGLEWORKSPACE_IMPERSONATED_USER_EMAIL", impersonation)
 	})
 
 	testGroupVals := map[string]interface{}{
@@ -65,9 +65,9 @@ func TestAccResourceUser_noImpersonation(t *testing.T) {
 	}
 
 	impersonation := getTestImpersonatedUserFromEnv()
-	os.Unsetenv("GOOGLEWORKSPACE_IMPERSONATED_USER_EMAIL")
+	_ = os.Unsetenv("GOOGLEWORKSPACE_IMPERSONATED_USER_EMAIL")
 	t.Cleanup(func() {
-		os.Setenv("GOOGLEWORKSPACE_IMPERSONATED_USER_EMAIL", impersonation)
+		_ = os.Setenv("GOOGLEWORKSPACE_IMPERSONATED_USER_EMAIL", impersonation)
 	})
 
 	testUserVals := map[string]interface{}{

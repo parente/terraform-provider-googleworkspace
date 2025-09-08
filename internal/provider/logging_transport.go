@@ -86,7 +86,10 @@ func prettyPrintJsonLines(b []byte) (string, error) {
 				return "", err
 			}
 
-			json.Indent(&out, b, "", " ")
+			err = json.Indent(&out, b, "", " ")
+			if err != nil {
+				return "", err
+			}
 			parts[i] = out.String()
 		}
 	}

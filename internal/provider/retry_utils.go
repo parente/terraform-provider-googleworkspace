@@ -10,21 +10,21 @@ import (
 	"time"
 
 	"github.com/hashicorp/errwrap"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 )
 
 func retryTimeDuration(ctx context.Context, duration time.Duration, retryFunc func() error) error {
-	return resource.RetryContext(ctx, duration, func() *resource.RetryError {
+	return retry.RetryContext(ctx, duration, func() *retry.RetryError {
 		err := retryFunc()
 
 		if err == nil {
 			return nil
 		}
 		if IsNotConsistent(err) {
-			return resource.RetryableError(err)
+			return retry.RetryableError(err)
 		}
 
-		return resource.NonRetryableError(err)
+		return retry.NonRetryableError(err)
 	})
 }
 

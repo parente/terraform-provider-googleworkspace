@@ -7,14 +7,15 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"google.golang.org/api/googleapi"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"sync"
 	"testing"
 	"time"
+
+	"google.golang.org/api/googleapi"
 )
 
 const testRetryTransportCodeRetry = 500
@@ -134,23 +135,23 @@ func TestRetryTransport_DoesNotRetryEmptyGetBody(t *testing.T) {
 	ts, client := setUpRetryTransportServerClient(http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			// Check for request body
-			dump, err := ioutil.ReadAll(r.Body)
+			dump, err := io.ReadAll(r.Body)
 			if err != nil {
 				w.WriteHeader(testRetryTransportCodeFailure)
-				if _, werr := w.Write([]byte(fmt.Sprintf("got error: %v", err))); werr != nil {
+				if _, werr := fmt.Fprintf(w, "got error: %v", err); werr != nil {
 					t.Errorf("[ERROR] unable to write to response writer: %v", err)
 				}
 			}
 			dumpS := string(dump)
 			if dumpS != msg {
 				w.WriteHeader(testRetryTransportCodeFailure)
-				if _, werr := w.Write([]byte(fmt.Sprintf("got unexpected body: %s", dumpS))); werr != nil {
+				if _, werr := fmt.Fprintf(w, "got unexpected body: %s", dumpS); werr != nil {
 					t.Errorf("[ERROR] unable to write to response writer: %v", err)
 				}
 			}
 			if attempted {
 				w.WriteHeader(testRetryTransportCodeFailure)
-				if _, werr := w.Write([]byte("expected only one try")); werr != nil {
+				if _, werr := fmt.Fprintf(w, "expected only one try"); werr != nil {
 					t.Errorf("[ERROR] unable to write to response writer: %v", err)
 				}
 			}
@@ -175,7 +176,7 @@ func TestRetryTransport_DoesNotRetryEmptyGetBody(t *testing.T) {
 func testRetryTransportHandler_noRetries(t *testing.T, code int) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(code)
-		if _, err := w.Write([]byte(fmt.Sprintf("Code: %d", code))); err != nil {
+		if _, err := fmt.Fprintf(w, "Code: %d", code); err != nil {
 			t.Errorf("[ERROR] unable to write to response writer: %v", err)
 		}
 	})
@@ -193,10 +194,10 @@ func testRetryTransportHandler_returnAfter(t *testing.T, interval time.Duration,
 		var slurp []byte
 		if r.Body != nil && r.Body != http.NoBody {
 			var err error
-			slurp, err = ioutil.ReadAll(r.Body)
+			slurp, err = io.ReadAll(r.Body)
 			if err != nil {
 				w.WriteHeader(testRetryTransportCodeFailure)
-				if _, err := w.Write([]byte(fmt.Sprintf("unable to read request body: %v", err))); err != nil {
+				if _, err := fmt.Fprintf(w, "unable to read request body: %v", err); err != nil {
 					t.Errorf("[ERROR] unable to write to response writer: %v", err)
 				}
 				return
@@ -286,14 +287,14 @@ func testRetryTransport_checkBody(t *testing.T, resp *http.Response, expectedMsg
 		t.Fatal("expected non-empty response")
 	}
 
-	actualBody, err := ioutil.ReadAll(resp.Body)
+	actualBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Fatalf("expected no error, unable to read response body: %v", err)
 	}
 
 	expectedBody := fmt.Sprintf("Request Body: %s", expectedMsg)
 	if !strings.HasSuffix(string(actualBody), expectedBody) {
-		t.Fatalf(expectedBody)
+		t.Fatal(expectedBody)
 	}
 }
 

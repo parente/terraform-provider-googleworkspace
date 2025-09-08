@@ -1013,7 +1013,7 @@ func resourceUserCreate(ctx context.Context, d *schema.ResourceData, meta interf
 	if d.Get("password").(string) == "" {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  fmt.Sprintf("Password is required when creating a new user"),
+			Summary:  "Password is required when creating a new user",
 		})
 
 		return diags
@@ -1166,49 +1166,133 @@ func resourceUserRead(ctx context.Context, d *schema.ResourceData, meta interfac
 		}
 	}
 
-	d.Set("primary_email", user.PrimaryEmail)
+	if err := d.Set("primary_email", user.PrimaryEmail); err != nil {
+		return diag.FromErr(err)
+	}
 	// password and hash_function are not returned in the response, so set them to what we defined in the config
-	d.Set("password", d.Get("password"))
-	d.Set("hash_function", d.Get("hash_function"))
-	d.Set("is_admin", user.IsAdmin)
-	d.Set("is_delegated_admin", user.IsDelegatedAdmin)
-	d.Set("agreed_to_terms", user.AgreedToTerms)
-	d.Set("suspended", user.Suspended)
-	d.Set("change_password_at_next_login", user.ChangePasswordAtNextLogin)
-	d.Set("ip_allowlist", user.IpWhitelisted)
-	d.Set("name", flattenName(user.Name))
-	d.Set("emails", flattenInterfaceObjects(user.Emails))
-	d.Set("external_ids", flattenInterfaceObjects(user.ExternalIds))
-	d.Set("relations", flattenInterfaceObjects(user.Relations))
-	d.Set("etag", user.Etag)
-	d.Set("aliases", user.Aliases)
-	d.Set("is_mailbox_setup", user.IsMailboxSetup)
-	d.Set("customer_id", user.CustomerId)
-	d.Set("addresses", flattenInterfaceObjects(user.Addresses))
-	d.Set("organizations", flattenInterfaceObjects(user.Organizations))
-	d.Set("last_login_time", user.LastLoginTime)
-	d.Set("phones", flattenInterfaceObjects(user.Phones))
-	d.Set("suspension_reason", user.SuspensionReason)
-	d.Set("thumbnail_photo_url", user.ThumbnailPhotoUrl)
-	d.Set("languages", flattenInterfaceObjects(user.Languages))
-	d.Set("posix_accounts", flattenInterfaceObjects(user.PosixAccounts))
-	d.Set("creation_time", user.CreationTime)
-	d.Set("non_editable_aliases", user.NonEditableAliases)
-	d.Set("ssh_public_keys", flattenInterfaceObjects(user.SshPublicKeys))
-	d.Set("websites", flattenInterfaceObjects(user.Websites))
-	d.Set("locations", flattenInterfaceObjects(user.Locations))
-	d.Set("include_in_global_address_list", user.IncludeInGlobalAddressList)
-	d.Set("keywords", flattenInterfaceObjects(user.Keywords))
-	d.Set("deletion_time", user.DeletionTime)
-	d.Set("thumbnail_photo_etag", user.ThumbnailPhotoEtag)
-	d.Set("ims", flattenInterfaceObjects(user.Ims))
-	d.Set("custom_schemas", customSchemas)
-	d.Set("is_enrolled_in_2_step_verification", user.IsEnrolledIn2Sv)
-	d.Set("is_enforced_in_2_step_verification", user.IsEnforcedIn2Sv)
-	d.Set("archived", user.Archived)
-	d.Set("org_unit_path", user.OrgUnitPath)
-	d.Set("recovery_email", user.RecoveryEmail)
-	d.Set("recovery_phone", user.RecoveryPhone)
+	if err := d.Set("password", d.Get("password")); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("hash_function", d.Get("hash_function")); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("is_admin", user.IsAdmin); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("is_delegated_admin", user.IsDelegatedAdmin); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("agreed_to_terms", user.AgreedToTerms); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("suspended", user.Suspended); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("change_password_at_next_login", user.ChangePasswordAtNextLogin); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("ip_allowlist", user.IpWhitelisted); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("name", flattenName(user.Name)); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("emails", flattenInterfaceObjects(user.Emails)); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("external_ids", flattenInterfaceObjects(user.ExternalIds)); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("relations", flattenInterfaceObjects(user.Relations)); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("etag", user.Etag); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("aliases", user.Aliases); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("is_mailbox_setup", user.IsMailboxSetup); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("customer_id", user.CustomerId); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("addresses", flattenInterfaceObjects(user.Addresses)); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("organizations", flattenInterfaceObjects(user.Organizations)); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("last_login_time", user.LastLoginTime); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("phones", flattenInterfaceObjects(user.Phones)); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("suspension_reason", user.SuspensionReason); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("thumbnail_photo_url", user.ThumbnailPhotoUrl); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("languages", flattenInterfaceObjects(user.Languages)); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("posix_accounts", flattenInterfaceObjects(user.PosixAccounts)); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("creation_time", user.CreationTime); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("non_editable_aliases", user.NonEditableAliases); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("ssh_public_keys", flattenInterfaceObjects(user.SshPublicKeys)); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("websites", flattenInterfaceObjects(user.Websites)); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("locations", flattenInterfaceObjects(user.Locations)); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("include_in_global_address_list", user.IncludeInGlobalAddressList); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("keywords", flattenInterfaceObjects(user.Keywords)); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("deletion_time", user.DeletionTime); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("thumbnail_photo_etag", user.ThumbnailPhotoEtag); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("ims", flattenInterfaceObjects(user.Ims)); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("custom_schemas", customSchemas); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("is_enrolled_in_2_step_verification", user.IsEnrolledIn2Sv); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("is_enforced_in_2_step_verification", user.IsEnforcedIn2Sv); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("archived", user.Archived); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("org_unit_path", user.OrgUnitPath); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("recovery_email", user.RecoveryEmail); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("recovery_phone", user.RecoveryPhone); err != nil {
+		return diag.FromErr(err)
+	}
 
 	d.SetId(user.Id)
 	log.Printf("[DEBUG] Finished getting User %q: %#v", d.Id(), primaryEmail)

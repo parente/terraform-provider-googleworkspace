@@ -437,7 +437,7 @@ func resourceGroupSettingsCreate(ctx context.Context, d *schema.ResourceData, me
 		} else if retryErr != nil {
 			return fmt.Errorf("unexpected error during retries of %s: %s", cc.resourceType, retryErr)
 		} else {
-			cc.handleNewEtag(newGroupSettings.ServerResponse.Header.Get("Etag"))
+			cc.handleNewEtag(newGroupSettings.Header.Get("Etag"))
 		}
 
 		return fmt.Errorf("timed out while waiting for group settings to be updated")
@@ -524,36 +524,96 @@ func resourceGroupSettingsRead(ctx context.Context, d *schema.ResourceData, meta
 		return diag.FromErr(err)
 	}
 
-	d.Set("email", group.Email)
-	d.Set("name", group.Name)
-	d.Set("description", group.Description)
-	d.Set("who_can_join", group.WhoCanJoin)
-	d.Set("who_can_view_membership", group.WhoCanViewMembership)
-	d.Set("who_can_view_group", group.WhoCanViewGroup)
-	d.Set("allow_external_members", allowExternalMembers)
-	d.Set("who_can_post_message", group.WhoCanPostMessage)
-	d.Set("allow_web_posting", allowWebPosting)
-	d.Set("primary_language", group.PrimaryLanguage)
-	d.Set("is_archived", isArchived)
-	d.Set("archive_only", archiveOnly)
-	d.Set("message_moderation_level", group.MessageModerationLevel)
-	d.Set("spam_moderation_level", group.SpamModerationLevel)
-	d.Set("reply_to", group.ReplyTo)
-	d.Set("custom_reply_to", group.CustomReplyTo)
-	d.Set("include_custom_footer", includeCustomFooter)
-	d.Set("custom_footer_text", group.CustomFooterText)
-	d.Set("send_message_deny_notification", sendMessageDenyNotification)
-	d.Set("default_message_deny_notification_text", group.DefaultMessageDenyNotificationText)
-	d.Set("members_can_post_as_the_group", membersCanPostAsTheGroup)
-	d.Set("include_in_global_address_list", includeInGlobalAddressList)
-	d.Set("who_can_leave_group", group.WhoCanLeaveGroup)
-	d.Set("who_can_contact_owner", group.WhoCanContactOwner)
-	d.Set("who_can_moderate_members", group.WhoCanModerateMembers)
-	d.Set("who_can_moderate_content", group.WhoCanModerateContent)
-	d.Set("who_can_assist_content", group.WhoCanAssistContent)
-	d.Set("custom_roles_enabled_for_settings_to_be_merged", customRolesEnabledForSettingsToBeMerged)
-	d.Set("enable_collaborative_inbox", enableCollaborativeInbox)
-	d.Set("who_can_discover_group", group.WhoCanDiscoverGroup)
+	if err := d.Set("email", group.Email); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("name", group.Name); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("description", group.Description); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("who_can_join", group.WhoCanJoin); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("who_can_view_membership", group.WhoCanViewMembership); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("who_can_view_group", group.WhoCanViewGroup); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("allow_external_members", allowExternalMembers); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("who_can_post_message", group.WhoCanPostMessage); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("allow_web_posting", allowWebPosting); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("primary_language", group.PrimaryLanguage); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("is_archived", isArchived); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("archive_only", archiveOnly); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("message_moderation_level", group.MessageModerationLevel); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("spam_moderation_level", group.SpamModerationLevel); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("reply_to", group.ReplyTo); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("custom_reply_to", group.CustomReplyTo); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("include_custom_footer", includeCustomFooter); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("custom_footer_text", group.CustomFooterText); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("send_message_deny_notification", sendMessageDenyNotification); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("default_message_deny_notification_text", group.DefaultMessageDenyNotificationText); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("members_can_post_as_the_group", membersCanPostAsTheGroup); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("include_in_global_address_list", includeInGlobalAddressList); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("who_can_leave_group", group.WhoCanLeaveGroup); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("who_can_contact_owner", group.WhoCanContactOwner); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("who_can_moderate_members", group.WhoCanModerateMembers); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("who_can_moderate_content", group.WhoCanModerateContent); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("who_can_assist_content", group.WhoCanAssistContent); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("custom_roles_enabled_for_settings_to_be_merged", customRolesEnabledForSettingsToBeMerged); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("enable_collaborative_inbox", enableCollaborativeInbox); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("who_can_discover_group", group.WhoCanDiscoverGroup); err != nil {
+		return diag.FromErr(err)
+	}
 
 	d.SetId(group.Email)
 
@@ -723,7 +783,7 @@ func resourceGroupSettingsUpdate(ctx context.Context, d *schema.ResourceData, me
 		} else if retryErr != nil {
 			return fmt.Errorf("unexpected error during retries of %s: %s", cc.resourceType, retryErr)
 		} else {
-			cc.handleNewEtag(newGroupSettings.ServerResponse.Header.Get("Etag"))
+			cc.handleNewEtag(newGroupSettings.Header.Get("Etag"))
 		}
 
 		return fmt.Errorf("timed out while waiting for group settings to be updated")
